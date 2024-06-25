@@ -44,23 +44,17 @@ The resolvers handle the actual logic for GraphQL queries and mutations. Each re
 
 ### Modules
 
-## Database (`modules/Database.ts`)
-This module handles all database interactions, providing methods for finding, inserting, updating, and deleting records. It is a derived work originally written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)) in JavaScript, and strongly typed by me, Oyeniyi Isaac ([GitHub](https://github.com/isaac0yen)).
+** Database (`modules/Database.ts`) This module handles all database interactions, providing methods for finding, inserting, updating, and deleting records. It is a derived work originally written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)) in JavaScript, and strongly typed by me, Oyeniyi Isaac ([GitHub](https://github.com/isaac0yen)).
 
-## Logger (`modules/Logger.ts`)
-This module provides a logging mechanism, allowing the application to log messages of various severity levels (info, warn, error). It is self-written by Oyeniyi Isaac ([GitHub](https://github.com/isaac0yen)).
+** Logger (`modules/Logger.ts`) This module provides a logging mechanism, allowing the application to log messages of various severity levels (info, warn, error). It is self-written by Oyeniyi Isaac ([GitHub](https://github.com/isaac0yen)).
 
-## ThrowError (`modules/ThrowError.ts`)
-A utility module to throw formatted errors consistently across the application. Written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)).
+** ThrowError (`modules/ThrowError.ts`) A utility module to throw formatted errors consistently across the application. Written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)).
 
-## Validate (`modules/Validate.ts`)
-Contains validation functions for various input types, ensuring data integrity before database operations. Written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)).
+** Validate (`modules/Validate.ts`) Contains validation functions for various input types, ensuring data integrity before database operations. Written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)).
 
-## Auth (`middleware/Auth.ts`)
-Middleware for handling authentication. Written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)).
+** Auth (`middleware/Auth.ts`) Middleware for handling authentication. Written by Engineer Leke Ojikutu ([GitHub](https://github.com/lojik-ng)).
 
-## FormatError (`middleware/FormatError.ts`)
-Middleware to format GraphQL errors before sending them to the client. It is self-written by Oyeniyi Isaac ([GitHub](https://github.com/isaac0yen)).
+** FormatError (`middleware/FormatError.ts`) Middleware to format GraphQL errors before sending them to the client. It is self-written by Oyeniyi Isaac ([GitHub](https://github.com/isaac0yen)).
 
 
 ### Index File (`index.ts`)
