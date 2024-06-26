@@ -1,5 +1,3 @@
-# Project README.md
-
 ## Overview
 
 This project is a Node.js application that utilizes GraphQL for API interactions, ensuring a clean and efficient architecture. The structure is designed to minimize redundant code, enhance error handling, and provide a robust logging mechanism. TypeScript is used to ensure type safety, and the project is linted and formatted to maintain code quality.
