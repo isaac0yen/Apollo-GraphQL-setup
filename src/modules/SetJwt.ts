@@ -7,8 +7,8 @@ import Logger from './Logger.js';
 import { db } from './Database.js';
 
 interface JWTObject {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
 }
 
 const setJWT = async (id: number): Promise<JWTObject | null> => {
@@ -18,50 +18,54 @@ const setJWT = async (id: number): Promise<JWTObject | null> => {
       ThrowError('JWT_ERROR');
     }
 
-    const userObject = await db.findOne('user', { id });
+    const user = await db.findOne('user', { id });
 
-    if (!userObject) {
+    const userObject = {
+      id: user.id
+    }
+
+    if (!user) {
       Logger.error('user not found while setting JWT', { id });
       ThrowError('JWT_ERROR');
     }
 
-    const accessToken: string = jwt.sign(
+    const access_token: string = jwt.sign(
       { userObject },
       process.env.ACCESS_TOKEN_SECRET as string,
       { expiresIn: '7d' },
     );
 
-    if (!accessToken) {
+    if (!access_token) {
       Logger.error('Access token not generated', { id });
       ThrowError('JWT_ERROR');
     }
 
-    const refreshId = Math.round(Math.random() * 9999999999) + '.' + Date.now();
+    const refresh_id = `${Math.round(Math.random() * 9999999999)}.${Date.now()}`;
 
     const refreshObject = {
       id,
-      refreshId,
+      refresh_id,
     };
 
-    const refreshToken: string = await jwt.sign(
+    const refresh_token: string = await jwt.sign(
       refreshObject,
       process.env.REFRESH_TOKEN_SECRET as string,
       { expiresIn: '30d' },
     );
 
-    if (!refreshToken) {
+    if (!refresh_token) {
       Logger.error('Refresh token not generated', { id });
       ThrowError('JWT_ERROR');
     }
 
-    const updated = await db.updateOne('user', { refreshId }, { id });
+    const updated = await db.updateOne('user', { refresh_id }, { id });
 
     if (updated < 1) {
       Logger.error('Refresh ID not updated', { id });
       ThrowError('JWT_ERROR');
     }
 
-    return { accessToken, refreshToken };
+    return { access_token, refresh_token };
   } catch (error) {
     return null;
   }

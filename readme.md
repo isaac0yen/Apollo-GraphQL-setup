@@ -1,15 +1,20 @@
 ## Overview
 
-This project is a Node.js application that utilizes GraphQL for API interactions, ensuring a clean and efficient architecture. The structure is designed to minimize redundant code, enhance error handling, and provide a robust logging mechanism. TypeScript is used to ensure type safety, and the project is linted and formatted to maintain code quality.
+This project is a Node.js application that utilizes GraphQL for API interactions, ensuring a clean and efficient architecture.
+**The setup takes note of certain issues when deploying with enviroments that aren't compatible with TypeScript.**
+The structure is designed to minimize redundant code, enhance error handling, and provide a robust logging mechanism. TypeScript is used to ensure type safety, and the project is linted and formatted to maintain code quality.
 
 ## Directory Structure
 
-```
 .
 ├── eslint.config.js
 ├── package.json
 ├── package-lock.json
 ├── readme.md
+├── scripts
+│   ├── compile.js
+│   ├── updates.js
+│   └── setup.js
 ├── src
 │   ├── index.ts
 │   ├── middleware
@@ -22,13 +27,12 @@ This project is a Node.js application that utilizes GraphQL for API interactions
 │   │   ├── ThrowError.ts
 │   │   └── Validate.ts
 │   ├── resolvers
-│   │   ├── resolverMain.ts
+│   │   ├── index.ts
 │   │   └── user.ts
 │   ├── typeDefs.ts
 │   └── types
 │       └── user.ts
 └── tsconfig.json
-```
 
 ## Key Components
 
@@ -91,15 +95,17 @@ The project uses ESLint for linting and Prettier for formatting. The configurati
 
 - **compile**: Compiles TypeScript files.
 - **start**: Compiles TypeScript files and starts the server.
+- **build**: Compiles TypeScript files and runs compile script.
 - **format**: Formats code using Prettier.
 - **lint**: Lints code using ESLint and fixes issues.
-
+- **prodlinstall**: Installs production dependencies only.
+- **prod**: Runs the compiled JavaScript code.
+- **setup**: Runs the setup script.
 ## Getting Started
 
-1. **Install Dependencies**: Run `npm install` to install the required dependencies.
+1. **Run Setup**: Run `npm run setup` to set up the project.
 2. **Start the Server**: Run `npm start` to compile the TypeScript files and start the server.
 3. **Linting and Formatting**: Use `npm run lint` and `npm run format` to ensure code quality.
-
 ## Conclusion
 
 This project is structured to provide a clean, efficient, and maintainable codebase. The use of TypeScript ensures type safety, while centralized error handling and logging mechanisms enhance robustness. The linting and formatting tools help maintain code quality, making the development process smoother and more reliable.

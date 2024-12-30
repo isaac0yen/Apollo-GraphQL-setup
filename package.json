@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "compile": "tsc",
-    "start": "tsc && node dist/index.js",
+    "start": "tsc && node scripts/compile.js && node dist/index.js",
+    "build": "tsc && node scripts/compile.js",
     "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix"
+    "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
+    "prodlinstall": "npm install --production",
+    "prod": "node index.js",
+    "setup": "node scripts/setup.js"
   },
   "keywords": [],
   "author": "",

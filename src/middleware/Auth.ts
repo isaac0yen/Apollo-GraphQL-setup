@@ -6,71 +6,68 @@ import Logger from '../modules/Logger.js';
 
 interface VerifiedToken extends JwtPayload {
   userObject?: Record<string, unknown>;
-  refreshId?: string;
+  refresh_id?: string;
 }
 
-function validateAccessToken(token: string): VerifiedToken | null {
+function verifyAccessToken(token: string): VerifiedToken | null {
   try {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, {
       algorithms: ['HS256'],
     }) as VerifiedToken;
   } catch (error) {
-    Logger.error('An error occured in Auth line 15', error);
+    Logger.error('Failed to verify access token', error);
     return null;
   }
 }
 
-function validateRefreshToken(token: string): VerifiedToken | null {
+function verifyRefreshToken(token: string): VerifiedToken | null {
   try {
     return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET as string, {
       algorithms: ['HS256'],
     }) as VerifiedToken;
   } catch (error) {
-    Logger.error('An error occured in Auth line 25', error);
+    Logger.error('Failed to verify refresh token', error);
     return null;
   }
 }
 
 const Auth = async (req, res): Promise<Record<string, unknown> | null> => {
   try {
-    const accessToken = req.headers['abc-access'] as string | undefined;
-    const refreshToken = req.headers['abc-refresh'] as string | undefined;
+    const access_token = req.headers['abc-access'] as string | undefined;
+    const refresh_token = req.headers['abc-refresh'] as string | undefined;
 
-    if (refreshToken && accessToken) {
-      const isValidAccessToken = validateAccessToken(accessToken);
-
-      if (isValidAccessToken) {
-        return isValidAccessToken.userObject ?? null;
-      }
-
-      const isValidRefreshToken = validateRefreshToken(refreshToken);
-
-      if (isValidRefreshToken && isValidRefreshToken.refreshId) {
-        const user = await db.findOne('user', {
-          refreshId: isValidRefreshToken.refreshId,
-        });
-
-        if (user) {
-          const userTokens = await setJWT(user.id);
-
-          res.set({
-            'Access-Control-Expose-Headers': 'abc-access,abc-refresh',
-            'abc-access': userTokens.accessToken,
-            'abc-refresh': userTokens.refreshToken,
-          });
-
-          return user.userObject;
-        } else {
-          return null;
-        }
-      } else {
-        ThrowError('RELOGIN');
-      }
-    } else {
+    if (!access_token || !refresh_token) {
       return null;
     }
+
+    const accessTokenPayload = verifyAccessToken(access_token);
+    if (accessTokenPayload) {
+      return accessTokenPayload.userObject ?? null;
+    }
+
+    const refreshTokenPayload = verifyRefreshToken(refresh_token);
+    if (!refreshTokenPayload || !refreshTokenPayload.refresh_id) {
+      ThrowError('RELOGIN');
+    }
+
+    const user = await db.findOne('user', {
+      refresh_id: refreshTokenPayload.refresh_id,
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const userTokens = await setJWT(user.id);
+    res.set({
+      'Access-Control-Expose-Headers': 'abc-access,abc-refresh',
+      'abc-access': userTokens.access_token,
+      'abc-refresh': userTokens.access_token,
+    });
+
+    return user.userObject;
   } catch (err) {
-    Logger.error('An error occured in Auth line 74 for user with id:', err);
+    Logger.error('Authentication process failed', err);
     return null;
   }
 };

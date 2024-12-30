@@ -8,6 +8,8 @@ import { UserInput } from '../types/user';
 export default {
   Mutation: {
     createUser: async (_, { input }: { input: UserInput }) => {
+
+
       if (!Validate.email(input.email)) {
         ThrowError('Your email is invalid.');
       }
@@ -47,8 +49,14 @@ export default {
 
     updateUser: async (
       _,
-      { userId, input }: { userId: number; input: UserInput },
+      { userId, input }: { userId: number; input: UserInput }, context
     ) => {
+
+      if (!context || context.id) {
+        ThrowError('AUTH_ERROR');
+      }
+
+
       const userExists = await db.findOne('user', { id: userId });
 
       if (!userExists) {
@@ -79,14 +87,20 @@ export default {
       return true;
     },
 
-    deleteUser: async (_, { userId }: { userId: number }) => {
+    deleteUser: async (_, { userId }: { userId: number }, context) => {
+
+      if (!context || context.id) {
+        ThrowError('AUTH_ERROR');
+      }
+
+
       const userExists = await db.findOne('user', { id: userId });
 
       if (!userExists) {
         ThrowError('User not found.');
       }
 
-      const userDeleted = await db.deleteOne('user', { id: userId });
+      const userDeleted = await db.updateOne('user', { status: "DELETED" }, { id: userId });
 
       if (userDeleted < 1) {
         ThrowError(
@@ -103,7 +117,14 @@ export default {
         oldPassword,
         newPassword,
       }: { userId: number; oldPassword: string; newPassword: string },
+      context
     ) => {
+
+      if (!context || context.id) {
+        ThrowError('AUTH_ERROR');
+      }
+
+
       const user = await db.findOne('user', { id: userId });
 
       if (!user) {
@@ -134,7 +155,13 @@ export default {
   },
 
   Query: {
-    getUser: async (_, { userId }: { userId: number }) => {
+    getUser: async (_, { userId }: { userId: number }, context) => {
+
+      if (!context || context.id) {
+        ThrowError('AUTH_ERROR');
+      }
+
+
       const user = await db.findOne('user', { id: userId });
 
       if (!user) {

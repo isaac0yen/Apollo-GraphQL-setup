@@ -1,12 +1,21 @@
 {
   "compilerOptions": {
-    "rootDirs": ["src"],
+    "rootDirs": ["src", "templates"],
     "outDir": "dist",
     "lib": ["es2020"],
     "target": "es2020",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"]
-  }
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"],
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
+
+
