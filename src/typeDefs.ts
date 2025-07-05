@@ -394,7 +394,6 @@ type Mutation {
     phoneNumber: String!
     emailAddress: String!
     identityType: String!
-    externalReference: String!
     identityNumber: String!
     identityId: String!
     otp: String!

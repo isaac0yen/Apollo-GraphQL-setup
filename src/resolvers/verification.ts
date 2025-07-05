@@ -3,6 +3,7 @@ import { createSubAccount } from "../safeHaven/subAccounts";
 import ThrowError from "../modules/ThrowError";
 import { v4 as uuidv4 } from 'uuid';
 import Logger from "../modules/Logger";
+import { db } from "../modules/Database";
 
 export default {
   Mutation: {
@@ -115,22 +116,21 @@ export default {
       }
     },
 
-    createUserSubAccount: async (_: unknown, { 
-      phoneNumber, 
-      emailAddress, 
-      identityType, 
-      externalReference, 
-      identityNumber, 
-      identityId, 
-      otp 
-    }: { 
-      phoneNumber: string; 
-      emailAddress: string; 
-      identityType: string; 
-      externalReference: string; 
-      identityNumber: string; 
-      identityId: string; 
-      otp: string; 
+    createUserSubAccount: async (_: unknown, {
+      phoneNumber,
+      emailAddress,
+      identityType,
+      identityNumber,
+      identityId,
+      otp
+    }: {
+      phoneNumber: string;
+      emailAddress: string;
+      identityType: string;
+      externalReference: string;
+      identityNumber: string;
+      identityId: string;
+      otp: string;
     }) => {
       try {
         // Validate identity type
@@ -139,7 +139,7 @@ export default {
         }
 
         // Format phone number to +234 format if needed
-        const formattedPhone = phoneNumber.startsWith('0') 
+        const formattedPhone = phoneNumber.startsWith('0')
           ? '+234' + phoneNumber.substring(1)
           : phoneNumber;
 
@@ -147,7 +147,7 @@ export default {
           phoneNumber: formattedPhone,
           emailAddress: emailAddress,
           identityType: identityType as 'BVN' | 'NIN',
-          externalReference: externalReference,
+          externalReference: uuidv4(),
           identityNumber: identityNumber,
           identityId: identityId,
           otp: otp
@@ -156,10 +156,45 @@ export default {
         const subAccountResult = await createSubAccount(subAccountData);
         console.log('Sub account creation result:', subAccountResult);
 
+        // Structure the response to match user table schema
+        const structuredUserData = {
+          email: emailAddress,
+          password_hash: null,
+          first_name: subAccountResult.data.subAccountDetails?.firstName || null,
+          last_name: subAccountResult.data.subAccountDetails?.lastName || null,
+          full_name: subAccountResult.data.accountName || null,
+          dob: null,
+          phone: formattedPhone,
+          gender: null,
+          state_of_origin: null,
+          lga_of_origin: null,
+          account_number: subAccountResult.data.accountNumber,
+          account_name: subAccountResult.data.accountName,
+          bvn: subAccountResult.data.bvn || null,
+          nin: subAccountResult.data.subAccountDetails?.nin || null,
+          identity_id: subAccountResult.data.identityId,
+          account_status: 'INACTIVE',
+          account_balance: subAccountResult.data.accountBalance || 0,
+          book_balance: subAccountResult.data.bookBalance || 0,
+          cba_account_id: subAccountResult.data.cbaAccountId,
+          role: 'STUDENT',
+          phone_number: formattedPhone,
+          kyc_verified: true,
+          kyc_level: 1,
+          institution: null,
+          created_at: subAccountResult.data.createdAt,
+          updated_at: subAccountResult.data.updatedAt
+        };
+
+        const inserted = await db.insertOne('users', structuredUserData);
+
+        if (!inserted) {
+          ThrowError('Failed to create user in the database');
+        }
+
         return {
           success: true,
-          message: 'Sub account created successfully',
-          data: subAccountResult
+          message: 'Account created successfully',
         };
       } catch (error) {
         console.error('Sub account creation failed:', error);

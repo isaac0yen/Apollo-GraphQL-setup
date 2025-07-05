@@ -16,18 +16,57 @@ export interface CreateSubAccountRequest {
 export interface CreateSubAccountResponse {
   statusCode: number;
   data: {
+    canDebit: boolean;
+    canCredit: boolean;
     _id: string;
+    client: string;
+    accountProduct: string;
     accountNumber: string;
     accountName: string;
-    phoneNumber: string;
-    emailAddress: string;
-    identityType: string;
-    externalReference: string;
-    identityNumber: string;
+    accountType: string;
+    currencyCode: string;
+    bvn: string;
     identityId: string;
-    clientId: string;
+    accountBalance: number;
+    bookBalance: number;
+    interestBalance: number;
+    withHoldingTaxBalance: number;
+    status: string;
+    isDefault: boolean;
+    nominalAnnualInterestRate: number;
+    interestCompoundingPeriod: string;
+    interestPostingPeriod: string;
+    interestCalculationType: string;
+    interestCalculationDaysInYearType: string;
+    minRequiredOpeningBalance: number;
+    lockinPeriodFrequency: number;
+    lockinPeriodFrequencyType: string;
+    allowOverdraft: boolean;
+    overdraftLimit: number;
+    chargeWithHoldingTax: boolean;
+    chargeValueAddedTax: boolean;
+    chargeStampDuty: boolean;
+    notificationSettings: {
+      smsNotification: boolean;
+      emailNotification: boolean;
+      emailMonthlyStatement: boolean;
+      smsMonthlyStatement: boolean;
+    };
+    isSubAccount: boolean;
+    subAccountDetails: {
+      firstName: string;
+      lastName: string;
+      emailAddress: string;
+      bvn: string;
+      nin: string;
+      accountType: string;
+    };
+    externalReference: string;
+    isDeleted: boolean;
     createdAt: string;
     updatedAt: string;
+    __v: number;
+    cbaAccountId: string;
   };
 }
 
