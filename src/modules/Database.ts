@@ -86,6 +86,7 @@
 // Usage: Provide a valid SQL query for execution.
 
 // Import dotenv to load environment variables
+import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_USER } from '../settings/config'
 import 'dotenv/config';
 import { Pool, createPool } from 'mysql2/promise';
 import { RowDataPacket, ResultSetHeader, FieldPacket } from 'mysql2';
@@ -107,10 +108,10 @@ let _DB: Pool;
 export const DBConnect = async () => {
   try {
     _DB = await createPool({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
+      host: DB_HOST,
+      user: DB_USER,
+      password: DB_PASSWORD,
+      database: DB_DATABASE,
       namedPlaceholders: true,
       waitForConnections: true,
       connectionLimit: 120,

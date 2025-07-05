@@ -27,9 +27,8 @@ DBConnect().then(() => {
 
   startStandaloneServer(server, {
     listen: { port: 4000 },
-    context: async ({ req, res }) => {
-      const config = await Auth(req, res);
-      return config;
+    context: async ({ req }) => {
+      return await Auth(req);
     },
   }).then(({ url }) => {
     console.log(`🚀  Server ready at: ${url}`);
